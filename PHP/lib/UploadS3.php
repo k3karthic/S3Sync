@@ -28,7 +28,6 @@ try {
             list($path,$key,$op,$rrs,$enc) = explode('<>',$line);
 
             $uploader = UploadBuilder::newInstance()
-                ->setConcurrency(3)
                 ->setClient($client)
                 ->setBucket($config['bucket']);
 

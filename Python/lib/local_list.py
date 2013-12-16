@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- encoding: utf-8 -*-
 
 import s3sync_lib
 import os
 import codecs
+import re
 
 config = s3sync_lib.get_config()
 files = s3sync_lib.get_files()
@@ -14,7 +15,7 @@ open(output_file, 'w').close()
 
 for file in files:
     dir_path = os.path.abspath(file[u'path'])
-    dir_name = file[u'dir']
+    exclude = []
     rrs = config[u'rrs']
     encrypt = config[u'encrypt']
     alias = u''
@@ -28,16 +29,26 @@ for file in files:
     if u'alias' in file:
         alias = file[u'alias']
 
+    if u'exclude' in file:
+        exclude = file[u'exclude']
+
     with codecs.open(output_file,encoding='UTF-8',mode='a') as lfile:
+        dir_name = os.path.basename(dir_path)
+        print('Listing files in %s...' % dir_name)
+
         for root,dir,files in os.walk(dir_path):
             for file in files:
                 file_path = os.path.join(root,file)
                 file_size = os.path.getsize(file_path)
                 file_mtime = os.path.getmtime(file_path)
 
+                for restr in exclude:
+                    if re.match(restr,file):
+                        continue
+
                 if file_size == 0:
                     continue
-    
+
                 lfile.write('<>'.join([
                     dir_name,
                     file_path,

@@ -6,7 +6,7 @@ import json
 
 def get_config():
     path = os.path.dirname(__file__) + '/../../config/credentials.json'
-    
+
     content = ''
     with codecs.open(path,encoding='UTF-8',mode='r') as cfile:
         content = cfile.read()
@@ -17,7 +17,7 @@ def get_config():
 
 def get_files():
     path = os.path.dirname(__file__) + '/../../config/files.json'
-    
+
     content = ''
     with codecs.open(path,encoding='UTF-8',mode='r') as cfile:
         content = cfile.read()
