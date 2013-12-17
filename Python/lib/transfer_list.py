@@ -87,16 +87,16 @@ with codecs.open(last_sync_file,encoding='UTF-8',mode='r') as sfile:
         mtime_files[key_hash] = [key, mtime]
 
 with codecs.open(output_file,encoding='UTF-8', mode='w') as ofile:
-    for key in s3_files:
-        if key in local_files:
+    for key in local_files:
+        file_list = local_files[key]
+        file_name = file_list[1]
+        file_size = file_list[2]
+        file_mtime = file_list[3]
+
+        if key in s3_files:
             add_file = False
             s3key, s3size = s3_files[key]
             s3mtime = 0
-
-            file_list = local_files[key]
-            file_name = file_list[1]
-            file_size = file_list[2]
-            file_mtime = file_list[3]
 
             if key in mtime_files:
                 s3mtime = mtime_files[key][1]
@@ -120,6 +120,17 @@ with codecs.open(output_file,encoding='UTF-8', mode='w') as ofile:
                             ]))
 
                 ofile.write(os.linesep)
+        else:
+            ofile.write('<>'.join([
+                        'ADD',
+                        s3key,
+                        file_name,
+                        file_list[4],
+                        file_list[5],
+                        file_mtime
+                        ]))
+
+            ofile.write(os.linesep)
 
     for key in s3_files:
         if key not in local_files:

@@ -38,13 +38,18 @@ for file in files:
 
         for root,dir,files in os.walk(dir_path):
             for file in files:
+                skip = False
                 file_path = os.path.join(root,file)
                 file_size = os.path.getsize(file_path)
                 file_mtime = os.path.getmtime(file_path)
 
                 for restr in exclude:
                     if re.match(restr,file):
-                        continue
+                        skip = True
+                        break
+
+                if skip == True:
+                    continue
 
                 if file_size == 0:
                     continue
