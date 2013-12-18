@@ -18,16 +18,24 @@ bucket = s3conn.get_bucket(config[u'bucket'])
 # Clear file
 open(output_file, 'w').close()
 
-bucket_list = bucket.list()
-
 with codecs.open(output_file,encoding='UTF-8',mode='a') as lfile:
-    for key in bucket_list:
+    previous_folder = ''
+
+    for key in bucket.list():
         if key.size == 0:
             continue
 
+        name = key.name
+        folder = name[0:name.index('/')]
+
+        if folder != previous_folder:
+            print('Listing files in %s...' % folder)
+
         lfile.write('<>'.join([
-                    key.name,
+                    name,
                     str(key.size)
                     ]))
 
         lfile.write(os.linesep)
+
+        previous_folder = folder

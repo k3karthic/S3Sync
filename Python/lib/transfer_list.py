@@ -75,6 +75,7 @@ with codecs.open(local_list_file,encoding='UTF-8',mode='r') as lfile:
         file_key = convert_to_s3key(file_name,dir_name,alias)
         file_key_hash = create_digest(file_key)
 
+        line_list.append(file_key)
         local_files[file_key_hash] = line_list
 
 with codecs.open(last_sync_file,encoding='UTF-8',mode='r') as sfile:
@@ -92,6 +93,7 @@ with codecs.open(output_file,encoding='UTF-8', mode='w') as ofile:
         file_name = file_list[1]
         file_size = file_list[2]
         file_mtime = file_list[3]
+        file_key = file_list[7]
 
         if key in s3_files:
             add_file = False
@@ -112,22 +114,20 @@ with codecs.open(output_file,encoding='UTF-8', mode='w') as ofile:
             if add_file == True:
                 ofile.write('<>'.join([
                             'ADD',
-                            s3key,
+                            file_key,
                             file_name,
                             file_list[4],
-                            file_list[5],
-                            file_mtime
+                            file_list[5]
                             ]))
 
                 ofile.write(os.linesep)
         else:
             ofile.write('<>'.join([
                         'ADD',
-                        s3key,
+                        file_key,
                         file_name,
                         file_list[4],
-                        file_list[5],
-                        file_mtime
+                        file_list[5]
                         ]))
 
             ofile.write(os.linesep)

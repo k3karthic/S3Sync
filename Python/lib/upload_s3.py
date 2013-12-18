@@ -30,7 +30,6 @@ with codecs.open(input_file,encoding='UTF-8',mode='r') as file:
             file_name = line_list[2]
             rrs = line_list[3]
             encrypt = line_list[4]
-            mtime = line_list[5]
 
             if rrs == '1':
                 rrs = True
