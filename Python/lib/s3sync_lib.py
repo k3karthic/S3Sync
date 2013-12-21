@@ -78,10 +78,13 @@ def save_last_sync(config):
     with codecs.open(local_file,encoding='UTF-8',mode='r') as sfile:
         for line in sfile:
             line_list = line.split('<>')
+            dir_name = line_list[0]
             file_name = line_list[1]
             file_mtime = line_list[3]
+            alias = line_list[6]
+            file_key = convert_to_s3key(file_name,dir_name,alias)
 
-            file.write('<>'.join([file_name,file_mtime]))
+            file.write('<>'.join([file_key,file_mtime]))
 
             file.write(os.linesep)
 
