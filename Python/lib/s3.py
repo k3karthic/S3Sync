@@ -5,6 +5,9 @@ import s3sync_lib
 import os
 import codecs
 import sys
+import subprocess
+
+import s3_upload as upload
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -48,8 +51,26 @@ def sync(config):
     
     s3conn = S3Connection(config[u'access_key'],config[u'secret_key'])
     bucket = s3conn.get_bucket(config[u'bucket'])
+
+    addwc = subprocess.Popen(
+        "cat " + input_file + " | grep ADD | wc -l",
+        stdout=subprocess.PIPE,
+        shell=True
+        )
+    (output,err) = addwc.communicate()
+    addlines = int(output.split(' ')[0])
+
+    deletewc = subprocess.Popen(
+        "cat " + input_file + " | grep DELETE | wc -l",
+        stdout=subprocess.PIPE,
+        shell=True)
+    (output,err) = deletewc.communicate()
+    deletelines = int(output.split(' ')[0])
     
     with codecs.open(input_file,encoding='UTF-8',mode='r') as file:
+        addcount = 1
+        deletecount = 1
+
         for line in file:
             line = line.strip()
             line_list = line.split('<>')
@@ -75,15 +96,15 @@ def sync(config):
                 else:
                     encrypt = False
     
-                print('      Uploading file %s...' % file_name)
+                print('      Uploading file (%d / %d) %s...' % (addcount,addlines,file_name))
     
-                k.set_contents_from_filename(
-                    file_name,
-                    reduced_redundancy=rrs,
-                    encrypt_key=encrypt
-                    )
+                upload.upload_file(k,file_name,rrs,encrypt)
+
+                addcount = addcount + 1
     
             if action == 'DELETE':
-                print('      Removing file %s...' % s3key)
+                print('      Removing file (%d / %d) s3://%s...' % (deletecount,deletelines,s3key))
     
                 bucket.delete_key(k)
+
+                deletecount = deletecount + 1
