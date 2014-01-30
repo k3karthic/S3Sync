@@ -1,4 +1,0 @@
-Modules Required
-================
-* Boto
-* Progressbar
