@@ -23,4 +23,4 @@ This allows S3Sync to sync based on size and modification time on a large number
 Screenshot
 ----------
 
-[![PHP](https://raw.github.com/k3karthic/S3Sync/master/screenshots/php.png)]()
+[![PHP](https://raw.github.com/k3karthic/S3Sync/master/screenshots/python.png)]()
