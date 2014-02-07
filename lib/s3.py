@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import os
+import sys
 import codecs
 import sys
 import subprocess
@@ -18,6 +19,53 @@ import botocore.paginate
 
 BUFFSIZE = 1024 * 8
 dirname = os.path.dirname(__file__)
+
+##
+## Classes
+##
+
+class ProxyFP:
+    def __init__(self,filename):
+        self.filename = filename
+        self.size = os.path.getsize(filename)
+        self.curr_size = 0
+        self.fp = open(filename,'rb')
+        self.start = True
+        self.percent = 0
+        self.np = 20
+
+    def __len__(self):
+        return self.size
+
+    def seek(self,pos):
+        self.fp.seek(pos)
+
+    def read(self,size):
+        if self.start == True:
+            print('      Progress:    ',end="")
+            sys.stdout.flush()
+            self.start = False
+
+        content = self.fp.read(size)
+        size = len(content)
+        self.curr_size = self.curr_size + size
+        percent = self.curr_size / self.size
+        times = int(percent * self.np)
+        percent = percent * 100
+        percent = int(percent)
+
+        if self.percent != percent:
+            self.percent = percent
+
+            if percent > 9:
+                print('\b' * 4,end='')
+            else:
+                print('\b' * 3,end='')
+
+            print(' ' + str(percent) + '%',end="")
+            sys.stdout.flush()
+
+        return content
 
 ##
 ## Utility Functions
@@ -60,6 +108,7 @@ def gen_s3_obj(method):
 ## S3 Functions
 ##
 
+
 def upload_file(key,filename,rrs,encrypt):
     endpoint,operation = gen_s3_obj('PutObject')
     size = os.stat(filename).st_size
@@ -69,7 +118,7 @@ def upload_file(key,filename,rrs,encrypt):
         return 0
 
     try:
-        fp = open(filename,'rb')
+        fp = ProxyFP(filename)
 
         http_response, data = operation.call(
             endpoint,
@@ -82,6 +131,8 @@ def upload_file(key,filename,rrs,encrypt):
 
         if code != 200:
             raise IOError(http_response.content)
+
+        print(os.linesep)
     except IOError as e:
         print(e)
         return 0
