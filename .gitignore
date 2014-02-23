@@ -1,5 +1,8 @@
 *~
 *pyc
 *.txt
+.project
+.pydevproject
+.settings/
 config/credentials.json
 config/files.json
