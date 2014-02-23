@@ -16,7 +16,7 @@ Please look at the readme in the [config](https://github.com/k3karthic/S3Sync/tr
 Operation
 ---------
 * S3Sync uses the ListBucket API call allowing it to scan through an S3 bucket a 1000 keys at a time.
-* S3Sync maintains a record of the modification times and stores in a file in S3 (S3Sync.txt).
+* S3Sync maintains a record of the modification times and stores in a file in S3 (LastSync.txt).
 
 This allows S3Sync to sync based on size and modification time on a large number of files very rapidly.
 
