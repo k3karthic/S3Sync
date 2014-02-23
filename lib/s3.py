@@ -111,10 +111,18 @@ def gen_s3_obj(method):
 def upload_file(key, filename, rrs, encrypt):
     endpoint, operation = gen_s3_obj('PutObject')
     size = os.stat(filename).st_size
+    storage_class = 'STANDARD'
+    encryption = ''
 
     if size == 0:
         print('Bad file size for "%s"' % (filename))
         return 0
+
+    if rrs == 1:
+        storage_class = 'REDUCED_REDUNDANCY'
+
+    if encrypt == 1:
+        encryption = 'AES256'
 
     try:
         fp = ProxyFP(filename)
@@ -123,7 +131,9 @@ def upload_file(key, filename, rrs, encrypt):
             endpoint,
             bucket='k3backup',
             key=key,
-            body=fp
+            body=fp,
+            storage_class=storage_class,
+            server_side_encryption=encryption
         )
 
         code = http_response.status_code
