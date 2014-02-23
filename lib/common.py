@@ -1,38 +1,36 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
+#  -*- encoding: utf-8 -*-
 
 import os
 import codecs
-import sys
 import json
 import glob
 
 dirname = os.path.dirname(__file__)
 
+
 def get_config():
-    path = os.path.join(dirname,'../config/credentials.json')
+    path = os.path.join(dirname, '../config/credentials.json')
 
-    content = ''
-    with codecs.open(path,encoding='UTF-8',mode='r') as cfile:
+    with codecs.open(path, encoding='UTF-8', mode='r') as cfile:
         content = cfile.read()
+        config = json.loads(content)
 
-    config = json.loads(content)
+        return config
 
-    return config
 
 def get_files():
-    path = os.path.join(dirname,'../config/files.json')
+    path = os.path.join(dirname, '../config/files.json')
 
-    content = ''
-    with codecs.open(path,encoding='UTF-8',mode='r') as cfile:
+    with codecs.open(path, encoding='UTF-8', mode='r') as cfile:
         content = cfile.read()
+        files = json.loads(content)
 
-    files = json.loads(content)
+        return files
 
-    return files
 
 def clear_working():
-    files = glob.glob(os.path.join(dirname,'../working/*.txt'))
+    files = glob.glob(os.path.join(dirname, '../working/*.txt'))
 
     for f in files:
         os.remove(f)
