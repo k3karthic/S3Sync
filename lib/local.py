@@ -49,7 +49,7 @@ def list_files():
                     file_mtime = os.path.getmtime(file_path)
 
                     for restr in exclude:
-                        if re.match(restr, file):
+                        if re.search(restr, file_path):
                             skip = True
                             break
 
