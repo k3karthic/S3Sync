@@ -170,12 +170,7 @@ def get_last_sync():
                 f.write(b)
                 b = data['Body'].read(BUFFSIZE)
     else:
-        message = http_response.content.decode('UTF-8')
-
-        if message.find('The specified key does not exist') != -1:
-            open(file_name, 'w').close()
-        else:
-            raise Exception('Could not download LastySync.txt')
+        open(file_name, 'w').close()
 
     return
 
