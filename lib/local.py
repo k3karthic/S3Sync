@@ -102,6 +102,8 @@ def calc_diff():
             alias = line_list[6]
 
             file_key = s3.convert_to_s3key(file_name, dir_name, alias)
+            # Replace \ with / for windows paths
+            file_key = file_key.replace('\\','/')
             file_key_hash = s3.create_digest(file_key)
 
             line_list.append(file_key)
