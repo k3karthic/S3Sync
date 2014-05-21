@@ -10,7 +10,7 @@ dirname = os.path.dirname(__file__)
 
 
 def get_config():
-    path = os.path.join(dirname, '../config/credentials.json')
+    path = os.path.join(dirname, '..', 'config', 'credentials.json')
 
     with codecs.open(path, encoding='UTF-8', mode='r') as cfile:
         content = cfile.read()
@@ -20,7 +20,7 @@ def get_config():
 
 
 def get_files():
-    path = os.path.join(dirname, '../config/files.json')
+    path = os.path.join(dirname, '..', 'config', 'files.json')
 
     with codecs.open(path, encoding='UTF-8', mode='r') as cfile:
         content = cfile.read()
@@ -30,7 +30,7 @@ def get_files():
 
 
 def clear_working():
-    files = glob.glob(os.path.join(dirname, '../working/*.txt'))
+    files = glob.glob(os.path.join(dirname, '..', 'working', '*.txt'))
 
     for f in files:
         os.remove(f)

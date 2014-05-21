@@ -73,10 +73,10 @@ def list_files():
 
 
 def calc_diff():
-    local_list_file = os.path.join(dirname, '../working/LocalList.txt')
-    s3_list_file = os.path.join(dirname, '../working/S3List.txt')
-    last_sync_file = os.path.join(dirname, '../working/LastSync.txt')
-    output_file = os.path.join(dirname, '../working/TransferList.txt')
+    local_list_file = os.path.join(dirname,'..','working','LocalList.txt')
+    s3_list_file = os.path.join(dirname, '..','working','S3List.txt')
+    last_sync_file = os.path.join(dirname, '..','working','LastSync.txt')
+    output_file = os.path.join(dirname, '..','working','TransferList.txt')
 
     s3_files = {}
     local_files = {}

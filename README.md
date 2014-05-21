@@ -8,6 +8,7 @@ S3Sync allows you to sync your files to [Amazon S3](http://aws.amazon.com/s3/).
 Modules Required
 ----------------
 * Botocore
+* Six
 
 Configuration
 -------------

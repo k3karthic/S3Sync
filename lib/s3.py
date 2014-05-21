@@ -6,6 +6,7 @@ import sys
 import codecs
 import subprocess
 import hashlib
+import six
 
 from lib import common
 
@@ -38,7 +39,7 @@ class ProxyFP:
 
     def read(self, size):
         if self.start == True:
-            print('      Progress:    ', end="")
+            six.print_('      Progress:    ', end="")
             sys.stdout.flush()
             self.start = False
 
@@ -53,11 +54,11 @@ class ProxyFP:
             self.percent = percent
 
             if percent > 9:
-                print('\b' * 4, end='')
+                six.print_('\b' * 4, end='')
             else:
-                print('\b' * 3, end='')
+                six.print_('\b' * 3, end='')
 
-            print(' ' + str(percent) + '%', end="")
+            six.print_(' ' + str(percent) + '%', end="")
             sys.stdout.flush()
 
         return content
