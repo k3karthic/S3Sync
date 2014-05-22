@@ -75,7 +75,7 @@ def convert_to_s3key(file_name, dir_name, alias):
 
     if len(alias) > 0:
         key = key.replace(dir_name, alias)
-
+        
     # Replace \ with / for windows paths
     key = key.replace('\\','/')
 
@@ -156,7 +156,7 @@ def upload_file(key, filename, rrs, encrypt):
 def get_last_sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('GetObject')
-    file_name = os.path.join(dirname, '../working/LastSync.txt')
+    file_name = os.path.join(dirname, '..','working','LastSync.txt')
 
     http_response, data = operation.call(
         endpoint,
@@ -183,10 +183,10 @@ def save_last_sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('PutObject')
 
-    sync_file = os.path.join(dirname, '../working/LastSync.txt')
-    local_file = os.path.join(dirname, '../working/LocalList.txt')
+    sync_file = os.path.join(dirname, '..','working','LastSync.txt')
+    local_file = os.path.join(dirname, '..','working','LocalList.txt')
 
-    file = open(sync_file, mode='w')
+    sync_fileh = open(sync_file, mode='w')
     with codecs.open(local_file, encoding='UTF-8', mode='r') as sfile:
         for line in sfile:
             line_list = line.split('<>')
@@ -224,7 +224,7 @@ def save_last_sync():
 def list_files():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('ListObjects')
-    output_file = os.path.join(dirname, '../working/S3List.txt')
+    output_file = os.path.join(dirname, '..','working','S3List.txt')
 
     paginator = botocore.paginate.Paginator(operation)
     iterator = paginator.paginate(
@@ -268,7 +268,7 @@ def list_files():
 def sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('DeleteObject')
-    input_file = os.path.join(dirname, '../working/TransferList.txt')
+    input_file = os.path.join(dirname, '..','working','TransferList.txt')
 
     addwc = subprocess.Popen(
         "cat " + input_file + " | grep ADD | wc -l",
