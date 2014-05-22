@@ -4,7 +4,6 @@
 import os
 import sys
 import codecs
-import subprocess
 import hashlib
 import six
 
@@ -270,20 +269,15 @@ def sync():
     endpoint, operation = gen_s3_obj('DeleteObject')
     input_file = os.path.join(dirname, '..','working','TransferList.txt')
 
-    addwc = subprocess.Popen(
-        "cat " + input_file + " | grep ADD | wc -l",
-        stdout=subprocess.PIPE,
-        shell=True
-        )
-    (output, _) = addwc.communicate()
-    addlines = int(output.decode('UTF-8').split(' ')[0])
-
-    deletewc = subprocess.Popen(
-        "cat " + input_file + " | grep DELETE | wc -l",
-        stdout=subprocess.PIPE,
-        shell=True)
-    (output, _) = deletewc.communicate()
-    deletelines = int(output.decode('UTF-8').split(' ')[0])
+    # Count number of add and delete commands
+    addlines = 0
+    deletelines = 0
+    with codecs.open(input_file, encoding='UTF-8', mode='r') as input_fileh:
+        for line in input_fileh:
+            if line.find('ADD') == 0:
+                addlines = addlines + 1
+            else:
+                deletelines = deletelines + 1
 
     with codecs.open(input_file, encoding='UTF-8', mode='r') as input_fileh:
         addcount = 1
