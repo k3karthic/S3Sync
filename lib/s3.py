@@ -213,6 +213,8 @@ def save_last_sync():
         body=fp
     )
 
+    fp.close()
+
     code = http_response.status_code
 
     if code != 200:
