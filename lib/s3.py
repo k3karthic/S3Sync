@@ -47,7 +47,8 @@ class ProxyFP:
         content = self.fp.read(size)
         size = len(content)
         self.curr_size = self.curr_size + size
-        percent = self.curr_size / self.size
+        # Force floating point division in python 2
+        percent = float(self.curr_size) / float(self.size)
         percent = percent * 100
         percent = int(percent)
 
