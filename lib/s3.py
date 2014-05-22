@@ -31,7 +31,9 @@ class ProxyFP:
         self.np = 20
 
     def __len__(self):
-        return self.size
+        return int(self.size)
+    
+    __nonzero__ = __len__
 
     def seek(self, pos):
         self.fp.seek(pos)
