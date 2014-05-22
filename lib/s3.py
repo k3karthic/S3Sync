@@ -196,11 +196,11 @@ def save_last_sync():
             alias = line_list[6]
             file_key = convert_to_s3key(file_name, dir_name, alias)
 
-            file.write('<>'.join([file_key, file_mtime]))
+            sync_fileh.write('<>'.join([file_key, file_mtime]))
 
-            file.write(os.linesep)
+            sync_fileh.write(os.linesep)
 
-    file.close()
+    sync_fileh.close()
 
     fp = open(sync_file, 'rb')
 
@@ -285,11 +285,11 @@ def sync():
     (output, _) = deletewc.communicate()
     deletelines = int(output.decode('UTF-8').split(' ')[0])
 
-    with codecs.open(input_file, encoding='UTF-8', mode='r') as file:
+    with codecs.open(input_file, encoding='UTF-8', mode='r') as input_fileh:
         addcount = 1
         deletecount = 1
 
-        for line in file:
+        for line in input_fileh:
             line = line.strip()
             line_list = line.split('<>')
 

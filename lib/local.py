@@ -13,38 +13,38 @@ dirname = os.path.dirname(__file__)
 
 def list_files():
     config = common.get_config()
-    files = common.get_files()
-    output_file = os.path.join(dirname, '../working/LocalList.txt')
+    files_config = common.get_files()
+    output_file = os.path.join(dirname, '..','working','LocalList.txt')
 
     open(output_file, 'w').close()
 
-    for file in files:
-        dir_path = os.path.abspath(file[u'path'])
+    for filename in files_config:
+        dir_path = os.path.abspath(filename[u'path'])
         exclude = []
         rrs = config[u'rrs']
         encrypt = config[u'encrypt']
         alias = u''
 
-        if u'rrs' in file:
-            rrs = file[u'rrs']
+        if u'rrs' in filename:
+            rrs = filename[u'rrs']
 
-        if u'encrypt' in file:
-            encrypt = file[u'encrypt']
+        if u'encrypt' in filename:
+            encrypt = filename[u'encrypt']
 
-        if u'alias' in file:
-            alias = file[u'alias']
+        if u'alias' in filename:
+            alias = filename[u'alias']
 
-        if u'exclude' in file:
-            exclude = file[u'exclude']
+        if u'exclude' in filename:
+            exclude = filename[u'exclude']
 
-        with codecs.open(output_file, encoding='UTF-8', mode='a') as lfile:
+        with codecs.open(output_file, encoding='UTF-8', mode='a') as ofile:
             dir_name = os.path.basename(dir_path)
             print('      Listing files in %s...' % dir_name)
 
-            for root, _, files in os.walk(dir_path):
-                for file in files:
+            for root, _, ofiles in os.walk(dir_path):
+                for ofilename in ofiles:
                     skip = False
-                    file_path = os.path.join(root, file)
+                    file_path = os.path.join(root, ofilename)
                     file_size = os.path.getsize(file_path)
                     file_mtime = os.path.getmtime(file_path)
 
@@ -59,7 +59,7 @@ def list_files():
                     if file_size == 0:
                         continue
 
-                    lfile.write('<>'.join([
+                    ofile.write('<>'.join([
                         dir_name,
                         file_path,
                         str(file_size),
@@ -69,7 +69,7 @@ def list_files():
                         str(alias)
                     ]))
 
-                    lfile.write(os.linesep)
+                    ofile.write(os.linesep)
 
 
 def calc_diff():
