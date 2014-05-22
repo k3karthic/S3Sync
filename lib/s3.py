@@ -76,6 +76,9 @@ def convert_to_s3key(file_name, dir_name, alias):
     if len(alias) > 0:
         key = key.replace(dir_name, alias)
 
+    # Replace \ with / for windows paths
+    key = key.replace('\\','/')
+
     return key
 
 
