@@ -1,8 +1,7 @@
 *~
 *pyc
 *.txt
-.project
-.pydevproject
-.settings/
+s3sync.sublime-project
+s3sync.sublime-workspace
 config/credentials.json
 config/files.json
