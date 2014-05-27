@@ -14,7 +14,7 @@ dirname = os.path.dirname(__file__)
 def list_files():
     config = common.get_config()
     files_config = common.get_files()
-    output_file = os.path.join(dirname, '..','working','LocalList.txt')
+    output_file = os.path.join(dirname, '..', 'working', 'LocalList.txt')
 
     open(output_file, 'w').close()
 
@@ -53,7 +53,7 @@ def list_files():
                             skip = True
                             break
 
-                    if skip == True:
+                    if skip is True:
                         continue
 
                     if file_size == 0:
@@ -73,10 +73,10 @@ def list_files():
 
 
 def calc_diff():
-    local_list_file = os.path.join(dirname,'..','working','LocalList.txt')
-    s3_list_file = os.path.join(dirname, '..','working','S3List.txt')
-    last_sync_file = os.path.join(dirname, '..','working','LastSync.txt')
-    output_file = os.path.join(dirname, '..','working','TransferList.txt')
+    local_list_file = os.path.join(dirname, '..', 'working', 'LocalList.txt')
+    s3_list_file = os.path.join(dirname, '..', 'working', 'S3List.txt')
+    last_sync_file = os.path.join(dirname, '..', 'working', 'LastSync.txt')
+    output_file = os.path.join(dirname, '..', 'working', 'TransferList.txt')
 
     s3_files = {}
     local_files = {}
@@ -87,10 +87,10 @@ def calc_diff():
     with codecs.open(s3_list_file, encoding='UTF-8', mode='r') as sfile:
         for line in sfile:
             line = line.strip()
-            
+
             if len(line) == 0:
                 continue
-            
+
             s3key, size = line.split('<>')
 
             s3key_hash = s3.create_digest(s3key)
@@ -100,10 +100,10 @@ def calc_diff():
     with codecs.open(local_list_file, encoding='UTF-8', mode='r') as lfile:
         for line in lfile:
             line = line.strip()
-            
+
             if len(line) == 0:
                 continue
-            
+
             line_list = line.split('<>')
             dir_name = line_list[0]
             file_name = line_list[1]
@@ -118,10 +118,10 @@ def calc_diff():
     with codecs.open(last_sync_file, encoding='UTF-8', mode='r') as sfile:
         for line in sfile:
             line = line.strip()
-            
+
             if len(line) == 0:
                 continue
-            
+
             key, mtime = line.split('<>')
 
             key_hash = s3.create_digest(key)
@@ -152,7 +152,7 @@ def calc_diff():
                 if s3mtime != file_mtime:
                     add_file = True
 
-                if add_file == True:
+                if add_file is True:
                     ofile.write('<>'.join([
                                 'ADD',
                                 file_key,

@@ -32,14 +32,14 @@ class ProxyFP:
 
     def __len__(self):
         return int(self.size)
-    
+
     __nonzero__ = __len__
 
     def seek(self, pos):
         self.fp.seek(pos)
 
     def read(self, size):
-        if self.start == True:
+        if self.start is True:
             six.print_('      Progress:    ', end="")
             sys.stdout.flush()
             self.start = False
@@ -77,9 +77,9 @@ def convert_to_s3key(file_name, dir_name, alias):
 
     if len(alias) > 0:
         key = key.replace(dir_name, alias)
-        
+
     # Replace \ with / for windows paths
-    key = key.replace('\\','/')
+    key = key.replace('\\', '/')
 
     return key
 
@@ -158,7 +158,7 @@ def upload_file(key, filename, rrs, encrypt):
 def get_last_sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('GetObject')
-    file_name = os.path.join(dirname, '..','working','LastSync.txt')
+    file_name = os.path.join(dirname, '..', 'working', 'LastSync.txt')
 
     http_response, data = operation.call(
         endpoint,
@@ -185,8 +185,8 @@ def save_last_sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('PutObject')
 
-    sync_file = os.path.join(dirname, '..','working','LastSync.txt')
-    local_file = os.path.join(dirname, '..','working','LocalList.txt')
+    sync_file = os.path.join(dirname, '..', 'working', 'LastSync.txt')
+    local_file = os.path.join(dirname, '..', 'working', 'LocalList.txt')
 
     sync_fileh = open(sync_file, mode='w')
     with codecs.open(local_file, encoding='UTF-8', mode='r') as sfile:
@@ -228,7 +228,7 @@ def save_last_sync():
 def list_files():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('ListObjects')
-    output_file = os.path.join(dirname, '..','working','S3List.txt')
+    output_file = os.path.join(dirname, '..', 'working', 'S3List.txt')
 
     paginator = botocore.paginate.Paginator(operation)
     iterator = paginator.paginate(
@@ -272,7 +272,7 @@ def list_files():
 def sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('DeleteObject')
-    input_file = os.path.join(dirname, '..','working','TransferList.txt')
+    input_file = os.path.join(dirname, '..', 'working', 'TransferList.txt')
 
     # Count number of add and delete commands
     addlines = 0
@@ -311,8 +311,8 @@ def sync():
                     encrypt = False
 
                 print(
-                      '      Uploading file (%d / %d) %s...' %
-                      (addcount, addlines, file_name)
+                    '      Uploading file (%d / %d) %s...' %
+                    (addcount, addlines, file_name)
                 )
 
                 upload_file(s3key, file_name, rrs, encrypt)
@@ -321,8 +321,8 @@ def sync():
 
             if action == 'DELETE':
                 print(
-                      '      Removing file (%d / %d) s3://%s...' %
-                      (deletecount, deletelines, s3key)
+                    '      Removing file (%d / %d) s3://%s...' %
+                    (deletecount, deletelines, s3key)
                 )
 
                 response, _ = operation.call(
