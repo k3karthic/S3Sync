@@ -12,6 +12,11 @@ from lib import common
 import botocore.session
 import botocore.paginate
 
+#===========
+# Constants
+#===========
+
+MIN_PROG_SIZE = 1024 * 1024
 BUFFSIZE = 1024 * 8
 dirname = os.path.dirname(__file__)
 
@@ -131,7 +136,12 @@ def upload_file(key, filename, rrs, encrypt):
         encryption = 'AES256'
 
     try:
-        fp = ProxyFP(filename)
+        fsize = os.stat(filename).st_size
+
+        if fsize < MIN_PROG_SIZE:
+            fp = open(filename, 'rb')
+        else:
+            fp = ProxyFP(filename)
 
         http_response, _ = operation.call(
             endpoint,
@@ -141,6 +151,9 @@ def upload_file(key, filename, rrs, encrypt):
             storage_class=storage_class,
             server_side_encryption=encryption
         )
+
+        if fsize < MIN_PROG_SIZE:
+            fp.close()
 
         code = http_response.status_code
 
