@@ -261,9 +261,6 @@ def list_files():
             for item in items:
                 name = item['Key']
 
-                if item['Size'] == 0:
-                    continue
-
                 try:
                     folder = name[0:name.index('/')]
 
