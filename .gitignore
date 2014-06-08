@@ -1,7 +1,2 @@
-*~
 *pyc
-*.txt
-s3sync.sublime-project
-s3sync.sublime-workspace
-config/credentials.json
-config/files.json
+/S3Sync.egg-info

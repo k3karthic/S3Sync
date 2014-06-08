@@ -1,0 +1,15 @@
+[
+    {
+        "path" : "F:\\GnuCash",
+        "dir" : "GnuCash",
+        "rrs" : 0
+    },
+    {
+        "path" : "F:\\Programs",
+        "dir" : "Programs",
+        "exclude" : [
+            "~$",
+            "dump$"
+        ]
+    }
+]

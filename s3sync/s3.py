@@ -7,7 +7,7 @@ import codecs
 import hashlib
 import six
 
-from lib import common
+from . import common
 
 import botocore.session
 import botocore.paginate
@@ -18,7 +18,7 @@ import botocore.paginate
 
 MIN_PROG_SIZE = 1024 * 1024
 BUFFSIZE = 1024 * 8
-dirname = os.path.dirname(__file__)
+dirname = common.dirname
 
 #============
 #  Classes
@@ -171,7 +171,7 @@ def upload_file(key, filename, rrs, encrypt):
 def get_last_sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('GetObject')
-    file_name = os.path.join(dirname, '..', 'working', 'LastSync.txt')
+    file_name = os.path.join(dirname, 'working', 'LastSync.txt')
 
     http_response, data = operation.call(
         endpoint,
@@ -198,8 +198,8 @@ def save_last_sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('PutObject')
 
-    sync_file = os.path.join(dirname, '..', 'working', 'LastSync.txt')
-    local_file = os.path.join(dirname, '..', 'working', 'LocalList.txt')
+    sync_file = os.path.join(dirname, 'working', 'LastSync.txt')
+    local_file = os.path.join(dirname, 'working', 'LocalList.txt')
 
     sync_fileh = open(sync_file, mode='w')
     with codecs.open(local_file, encoding='UTF-8', mode='r') as sfile:
@@ -241,7 +241,7 @@ def save_last_sync():
 def list_files():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('ListObjects')
-    output_file = os.path.join(dirname, '..', 'working', 'S3List.txt')
+    output_file = os.path.join(dirname, 'working', 'S3List.txt')
 
     paginator = botocore.paginate.Paginator(operation)
     iterator = paginator.paginate(
@@ -282,7 +282,7 @@ def list_files():
 def sync():
     config = common.get_config()
     endpoint, operation = gen_s3_obj('DeleteObject')
-    input_file = os.path.join(dirname, '..', 'working', 'TransferList.txt')
+    input_file = os.path.join(dirname, 'working', 'TransferList.txt')
 
     # Count number of add and delete commands
     addlines = 0

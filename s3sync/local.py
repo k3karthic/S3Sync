@@ -5,16 +5,16 @@ import os
 import codecs
 import re
 
-from lib import s3
-from lib import common
+from . import s3
+from . import common
 
-dirname = os.path.dirname(__file__)
+dirname = common.dirname
 
 
 def list_files():
     config = common.get_config()
     files_config = common.get_files()
-    output_file = os.path.join(dirname, '..', 'working', 'LocalList.txt')
+    output_file = os.path.join(dirname, 'working', 'LocalList.txt')
 
     open(output_file, 'w').close()
 
@@ -73,10 +73,10 @@ def list_files():
 
 
 def calc_diff():
-    local_list_file = os.path.join(dirname, '..', 'working', 'LocalList.txt')
-    s3_list_file = os.path.join(dirname, '..', 'working', 'S3List.txt')
-    last_sync_file = os.path.join(dirname, '..', 'working', 'LastSync.txt')
-    output_file = os.path.join(dirname, '..', 'working', 'TransferList.txt')
+    local_list_file = os.path.join(dirname, 'working', 'LocalList.txt')
+    s3_list_file = os.path.join(dirname, 'working', 'S3List.txt')
+    last_sync_file = os.path.join(dirname, 'working', 'LastSync.txt')
+    output_file = os.path.join(dirname, 'working', 'TransferList.txt')
 
     s3_files = {}
     local_files = {}
