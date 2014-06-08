@@ -16,7 +16,7 @@ python setup.py install
 s3sync
 ```
 
-> s3sync creates a sample configuration directory in your home folder if it does'nt exist
+> s3sync creates a sample configuration directory in your home folder if it doesn't exist
 
 ## Configuration
 
