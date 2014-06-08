@@ -7,7 +7,7 @@ S3Sync allows you to sync your files to [Amazon S3](http://aws.amazon.com/s3/).
 ## Installation
 
 ```
-python setup.py install
+pip install s3sync
 ```
 
 ## Usage
