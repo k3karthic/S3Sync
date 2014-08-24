@@ -1,6 +1,19 @@
 #!/usr/bin/env python
 #  -*- encoding: utf-8 -*-
 
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+# Python 2-3 Compat
+import six
+
+from six import iterkeys
+from six import itervalues
+from six import iteritems
+from six import iterlists
+
 import os
 import sys
 import codecs
@@ -201,21 +214,19 @@ def save_last_sync():
     sync_file = os.path.join(dirname, 'working', 'LastSync.txt')
     local_file = os.path.join(dirname, 'working', 'LocalList.txt')
 
-    sync_fileh = open(sync_file, mode='w')
-    with codecs.open(local_file, encoding='UTF-8', mode='r') as sfile:
-        for line in sfile:
-            line_list = line.split('<>')
-            dir_name = line_list[0]
-            file_name = line_list[1]
-            file_mtime = line_list[3]
-            alias = line_list[6]
-            file_key = convert_to_s3key(file_name, dir_name, alias)
+    with codecs.open(sync_file, encoding='UTF-8', mode='w') as sync_fileh:
+        with codecs.open(local_file, encoding='UTF-8', mode='r') as sfile:
+            for line in sfile:
+                line_list = line.split('<>')
+                dir_name = line_list[0]
+                file_name = line_list[1]
+                file_mtime = line_list[3]
+                alias = line_list[6]
+                file_key = convert_to_s3key(file_name, dir_name, alias)
 
-            sync_fileh.write('<>'.join([file_key, file_mtime]))
+                sync_fileh.write('<>'.join([file_key, file_mtime]))
 
-            sync_fileh.write(os.linesep)
-
-    sync_fileh.close()
+                sync_fileh.write(os.linesep)
 
     fp = open(sync_file, 'rb')
 
@@ -322,7 +333,7 @@ def sync():
 
                 print(
                     '      Uploading file (%d / %d) %s...' %
-                    (addcount, addlines, file_name)
+                    (addcount, addlines, file_name.encode('utf-8'))
                 )
 
                 upload_file(s3key, file_name, rrs, encrypt)
@@ -332,7 +343,7 @@ def sync():
             if action == 'DELETE':
                 print(
                     '      Removing file (%d / %d) s3://%s...' %
-                    (deletecount, deletelines, s3key)
+                    (deletecount, deletelines, s3key.encode('utf-8'))
                 )
 
                 response, _ = operation.call(

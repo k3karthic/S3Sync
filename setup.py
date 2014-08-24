@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='S3Sync',
-    version='0.1.0',
+    version='0.1.1',
     author='Karthic Kumaran',
     author_email='k3.karthic@live.com',
     packages=['s3sync'],

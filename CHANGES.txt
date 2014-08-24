@@ -1,1 +1,2 @@
+v0.1.1, 2014-08-24 -- Fix unicode issues
 v0.1.0, 2014-06-08 -- Initial Release
