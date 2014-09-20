@@ -71,7 +71,7 @@ def sync_files():
 
     print('')
 
-    print('------Syncing changes to S3------')
+    print('------Syncing changes------')
     start = datetime.datetime.now()
     cloud.sync()
     stop = datetime.datetime.now()

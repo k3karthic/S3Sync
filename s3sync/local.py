@@ -138,6 +138,8 @@ def calc_diff():
 
             if key in s3_files:
                 add_file = False
+                down_file = False
+
                 s3key, s3size = s3_files[key]
                 s3mtime = 0
 
@@ -146,10 +148,12 @@ def calc_diff():
                 else:
                     s3mtime = file_mtime
 
-                if s3size != file_size:
-                    add_file = True
+                s3mtime = float(s3mtime)
+                file_mtime = float(file_mtime)
 
-                if s3mtime != file_mtime:
+                if s3mtime > file_mtime:
+                    down_file = True
+                elif file_mtime > s3mtime:
                     add_file = True
 
                 if add_file is True:
@@ -159,6 +163,16 @@ def calc_diff():
                                 file_name,
                                 file_list[4],
                                 file_list[5]
+                                ]))
+
+                    ofile.write(os.linesep)
+
+                if down_file is True:
+                    ofile.write('<>'.join([
+                                'DOWN',
+                                file_key,
+                                file_name,
+                                str(s3mtime)
                                 ]))
 
                     ofile.write(os.linesep)

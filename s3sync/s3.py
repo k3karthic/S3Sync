@@ -133,6 +133,7 @@ def gen_s3_obj(method):
 
 
 def upload_file(key, filename, rrs, encrypt):
+    config = common.get_config()
     endpoint, operation = gen_s3_obj('PutObject')
     size = os.stat(filename).st_size
     storage_class = 'STANDARD'
@@ -158,7 +159,7 @@ def upload_file(key, filename, rrs, encrypt):
 
         http_response, _ = operation.call(
             endpoint,
-            bucket='k3backup',
+            bucket=config[u'bucket'],
             key=key,
             body=fp,
             storage_class=storage_class,
@@ -172,6 +173,49 @@ def upload_file(key, filename, rrs, encrypt):
 
         if code != 200:
             raise IOError(http_response.content)
+
+        print(os.linesep)
+    except IOError as e:
+        print(e)
+        return 0
+
+    return size
+
+
+def download_file(key, filename, file_mtime):
+    config = common.get_config()
+    endpoint, operation = gen_s3_obj('GetObject')
+    size = os.stat(filename).st_size
+
+    if size == 0:
+        print('Bad file size for "%s"' % (filename))
+        return 0
+
+    try:
+        http_response, data = operation.call(
+            endpoint,
+            bucket=config[u'bucket'],
+            key=key
+        )
+
+        code = http_response.status_code
+
+        if code != 200:
+            raise IOError(http_response.content)
+
+        with open(filename, 'wb') as f:
+            b = data['Body'].read(BUFFSIZE)
+
+            while b:
+                f.write(b)
+                b = data['Body'].read(BUFFSIZE)
+
+        os.utime(
+            filename, (
+                os.path.getatime(filename),
+                int(float(file_mtime))
+            )
+        )
 
         print(os.linesep)
     except IOError as e:
@@ -297,16 +341,20 @@ def sync():
 
     # Count number of add and delete commands
     addlines = 0
+    downlines = 0
     deletelines = 0
     with codecs.open(input_file, encoding='UTF-8', mode='r') as input_fileh:
         for line in input_fileh:
             if line.find('ADD') == 0:
                 addlines = addlines + 1
+            elif line.find('DOWN') == 0:
+                downlines = downlines + 1
             else:
                 deletelines = deletelines + 1
 
     with codecs.open(input_file, encoding='UTF-8', mode='r') as input_fileh:
         addcount = 1
+        downcount = 1
         deletecount = 1
 
         for line in input_fileh:
@@ -339,6 +387,19 @@ def sync():
                 upload_file(s3key, file_name, rrs, encrypt)
 
                 addcount = addcount + 1
+
+            if action == 'DOWN':
+                file_name = line_list[2]
+                file_mtime = line_list[3]
+
+                print(
+                    '      Downloading file (%d / %d) %s...' %
+                    (downcount, downlines, file_name.encode('utf-8'))
+                )
+
+                download_file(s3key, file_name, file_mtime)
+
+                downcount = downcount + 1
 
             if action == 'DELETE':
                 print(
